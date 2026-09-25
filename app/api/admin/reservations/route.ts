@@ -1,4 +1,5 @@
 import { getChatGPTUser } from "@/app/chatgpt-auth";
+import { isAuthorizedAdmin } from "@/app/admin-authorization";
 import { getD1 } from "@/db";
 import type { AdminReservation, ReservationStatus } from "@/lib/admin-reservations";
 
@@ -6,13 +7,17 @@ function isIsoDate(value: string) {
   return /^\d{4}-\d{2}-\d{2}$/.test(value) && !Number.isNaN(Date.parse(`${value}T00:00:00Z`));
 }
 
-async function requireAdminApiUser() {
-  return getChatGPTUser();
+async function getAdminApiAccess() {
+  const user = await getChatGPTUser();
+  if (!user) return { allowed: false, status: 401, message: "Sign in is required." } as const;
+  if (!isAuthorizedAdmin(user)) return { allowed: false, status: 403, message: "Administrator access is required." } as const;
+  return { allowed: true } as const;
 }
 
 export async function GET(request: Request) {
-  if (!(await requireAdminApiUser())) {
-    return Response.json({ error: "Sign in is required." }, { status: 401 });
+  const access = await getAdminApiAccess();
+  if (!access.allowed) {
+    return Response.json({ error: access.message }, { status: access.status });
   }
 
   const date = new URL(request.url).searchParams.get("date") ?? "";
@@ -49,8 +54,9 @@ export async function GET(request: Request) {
 }
 
 export async function PATCH(request: Request) {
-  if (!(await requireAdminApiUser())) {
-    return Response.json({ error: "Sign in is required." }, { status: 401 });
+  const access = await getAdminApiAccess();
+  if (!access.allowed) {
+    return Response.json({ error: access.message }, { status: access.status });
   }
 
   try {
