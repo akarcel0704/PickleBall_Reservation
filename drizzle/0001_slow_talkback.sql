@@ -1,0 +1,2 @@
+DROP INDEX `idx_reservations_slot`;--> statement-breakpoint
+CREATE UNIQUE INDEX `idx_reservations_active_slot` ON `reservations` (`booking_date`,`court_id`,`start_time`) WHERE "reservations"."status" = 'confirmed';

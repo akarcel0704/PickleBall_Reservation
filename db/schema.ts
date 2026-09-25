@@ -1,3 +1,4 @@
+import { sql } from "drizzle-orm";
 import { index, integer, sqliteTable, text, uniqueIndex } from "drizzle-orm/sqlite-core";
 
 export const reservations = sqliteTable(
@@ -16,11 +17,9 @@ export const reservations = sqliteTable(
     createdAt: integer("created_at").notNull(),
   },
   (table) => [
-    uniqueIndex("idx_reservations_slot").on(
-      table.bookingDate,
-      table.courtId,
-      table.startTime,
-    ),
+    uniqueIndex("idx_reservations_active_slot")
+      .on(table.bookingDate, table.courtId, table.startTime)
+      .where(sql`${table.status} = 'confirmed'`),
     index("idx_reservations_booking_date").on(table.bookingDate),
   ],
 );
