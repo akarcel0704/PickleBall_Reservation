@@ -1,0 +1,87 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "../vendor/shadcn-tailwind-4.13.0.css";
+
+:root {
+  --background: #f8faf9;
+  --foreground: #0b1f2a;
+  --card: #ffffff;
+  --card-foreground: #0b1f2a;
+  --popover: #ffffff;
+  --popover-foreground: #0b1f2a;
+  --primary: #0b1f2a;
+  --primary-foreground: #ffffff;
+  --secondary: #edf3f1;
+  --secondary-foreground: #173847;
+  --muted: #edf3f1;
+  --muted-foreground: #607681;
+  --accent: #eff8da;
+  --accent-foreground: #263715;
+  --destructive: #c93f43;
+  --border: #d8e2e4;
+  --input: #c5d3d7;
+  --ring: #1f839b;
+  --chart-1: #0b1f2a;
+  --chart-2: #d7ff3f;
+  --chart-3: #1f839b;
+  --chart-4: #70a66f;
+  --chart-5: #f2a95c;
+  --radius: 0.85rem;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 5px);
+  --radius-md: calc(var(--radius) - 3px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 5px);
+  --font-sans: "Avenir Next", "Segoe UI", Arial, sans-serif;
+}
+
+* { border-color: var(--border); }
+html { background: var(--background); }
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: "Avenir Next", "Segoe UI", Arial, sans-serif;
+}
+button, input, select { font: inherit; }
+
+.court-lines {
+  background-image:
+    linear-gradient(90deg, transparent 49.85%, rgba(255,255,255,.45) 50%, transparent 50.15%),
+    linear-gradient(0deg, transparent 49.7%, rgba(255,255,255,.28) 50%, transparent 50.3%),
+    linear-gradient(90deg, transparent 14%, rgba(255,255,255,.18) 14.2%, transparent 14.4%, transparent 85.6%, rgba(255,255,255,.18) 85.8%, transparent 86%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
