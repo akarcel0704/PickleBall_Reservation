@@ -1,4 +1,4 @@
-import { getChatGPTUser } from "@/app/chatgpt-auth";
+import { getAdminUser } from "@/app/admin-auth";
 import { isAuthorizedAdmin } from "@/app/admin-authorization";
 import { getD1 } from "@/db";
 import type { AdminReservation, ReservationStatus } from "@/lib/admin-reservations";
@@ -8,7 +8,7 @@ function isIsoDate(value: string) {
 }
 
 async function getAdminApiAccess() {
-  const user = await getChatGPTUser();
+  const user = await getAdminUser();
   if (!user) return { allowed: false, status: 401, message: "Sign in is required." } as const;
   if (!isAuthorizedAdmin(user)) return { allowed: false, status: 403, message: "Administrator access is required." } as const;
   return { allowed: true } as const;

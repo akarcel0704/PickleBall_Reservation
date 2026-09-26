@@ -1,12 +1,6 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-
-export type ChatGPTUser = {
-  userId: string;
-  displayName: string;
-  email: string;
-  fullName: string | null;
-};
+import type { AuthenticatedUser } from "@/app/authenticated-user";
 
 const USER_ID_HEADER = "oai-authenticated-user-id";
 const USER_EMAIL_HEADER = "oai-authenticated-user-email";
@@ -18,7 +12,7 @@ const SIGN_IN_PATH = "/signin-with-chatgpt";
 const SIGN_OUT_PATH = "/signout-with-chatgpt";
 const CALLBACK_PATH = "/callback";
 
-export async function getChatGPTUser(): Promise<ChatGPTUser | null> {
+export async function getChatGPTUser(): Promise<AuthenticatedUser | null> {
   const requestHeaders = await headers();
   const userId = requestHeaders.get(USER_ID_HEADER);
   const email = requestHeaders.get(USER_EMAIL_HEADER);
@@ -41,7 +35,7 @@ export async function getChatGPTUser(): Promise<ChatGPTUser | null> {
 
 export async function requireChatGPTUser(
   returnTo: string,
-): Promise<ChatGPTUser> {
+): Promise<AuthenticatedUser> {
   const user = await getChatGPTUser();
   if (user) return user;
 

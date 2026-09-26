@@ -116,6 +116,34 @@ Replace the filename with the pending migration and `DB` with your D1 binding na
 - `npm run start`: preview the built Worker locally with D1/R2 support
 - `npm run db:generate`: generate Drizzle migrations after schema changes
 
+## Direct Cloudflare deployment
+
+The repository can also deploy directly to the `pickleball-reservation` Worker
+without changing the existing Sites deployment.
+
+- Build command: `npm run build:cloudflare`
+- Deploy command: `npm run deploy:cloudflare`
+- D1 database: `pickleball-reservations-db`
+- D1 binding: `DB`
+
+The direct build writes the production D1 binding into the generated
+`dist/server/wrangler.json`. The deploy command applies pending SQL files from
+`drizzle/` through Wrangler's migration tracking before deploying the Worker,
+so tables and indexes must not be created manually.
+
+The customer booking routes remain public. Protect `/admin*` and
+`/api/admin*` with Cloudflare Access, then configure these Worker runtime
+secrets in the Cloudflare dashboard:
+
+- `ADMIN_EMAIL`: the only administrator email allowed by the application
+- `CLOUDFLARE_ACCESS_TEAM_DOMAIN`: the full team URL, such as
+  `https://example.cloudflareaccess.com`
+- `CLOUDFLARE_ACCESS_AUD`: the Access application's Audience (AUD) tag
+
+Direct builds set `AUTH_PROVIDER=cloudflare-access` automatically. Admin pages
+and APIs fail closed until Access supplies a JWT whose signature, issuer, and
+audience validate and whose email matches `ADMIN_EMAIL`.
+
 When using the Sites plugin, follow its skill instructions for installation, builds, and publishing. These npm commands remain available for standalone use.
 
 The portable build runs Vinext directly without a host `timeout` command. The managed-linux build uses `scripts/build-verified.sh` and its existing `SITES_BUILD_TIMEOUT` setting.
