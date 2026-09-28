@@ -140,6 +140,22 @@ secrets in the Cloudflare dashboard:
   `https://example.cloudflareaccess.com`
 - `CLOUDFLARE_ACCESS_AUD`: the Access application's Audience (AUD) tag
 
+`ADMIN_EMAIL` and the email allowed by the Cloudflare Access policy must match
+the authenticated Cloudflare identity exactly, including punctuation such as
+dots in the local part of the address.
+
+To create the path-scoped `CourtSide Admin` Access application for this
+deployment, run the helper from the repository root:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\create-cloudflare-access-app.ps1
+```
+
+The helper securely prompts for a temporary Cloudflare API token with
+`Access: Apps and Policies: Edit`, reuses an existing application with the same
+name, and prints the Audience (AUD) tag needed by the Worker. Revoke the
+temporary token after the application is created.
+
 Direct builds set `AUTH_PROVIDER=cloudflare-access` automatically. Admin pages
 and APIs fail closed until Access supplies a JWT whose signature, issuer, and
 audience validate and whose email matches `ADMIN_EMAIL`.
