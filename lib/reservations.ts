@@ -26,8 +26,9 @@ export type BookingDetails = {
   playerCount: number;
 };
 
-export type BookingConfirmation = BookingDetails & {
+export type BookingRequestReceipt = BookingDetails & {
   confirmationCode: string;
+  status: "pending";
 };
 
 export function todayIso() {

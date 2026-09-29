@@ -1,6 +1,6 @@
 import type { CourtId } from "@/lib/reservations";
 
-export type ReservationStatus = "confirmed" | "cancelled";
+export type ReservationStatus = "pending" | "confirmed" | "declined" | "cancelled";
 
 export type AdminReservation = {
   id: number;

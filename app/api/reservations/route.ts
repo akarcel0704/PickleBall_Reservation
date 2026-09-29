@@ -30,7 +30,7 @@ export async function GET(request: Request) {
       .prepare(
         `SELECT court_id AS courtId, start_time AS startTime
          FROM reservations
-         WHERE booking_date = ? AND status = 'confirmed'
+         WHERE booking_date = ? AND status IN ('pending', 'confirmed')
          ORDER BY start_time, court_id`,
       )
       .bind(date)
@@ -77,7 +77,7 @@ export async function POST(request: Request) {
       .prepare(
         `INSERT INTO reservations
           (confirmation_code, court_id, booking_date, start_time, guest_name, email, phone, player_count, status, created_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'confirmed', ?)`,
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?)`,
       )
       .bind(
         confirmationCode,
@@ -103,6 +103,7 @@ export async function POST(request: Request) {
           email,
           phone,
           playerCount,
+          status: "pending",
         },
       },
       { status: 201 },

@@ -62,7 +62,12 @@ export async function PATCH(request: Request) {
   try {
     const payload = (await request.json()) as { id?: number; status?: ReservationStatus };
     const id = Number(payload.id);
-    if (!Number.isInteger(id) || id < 1 || !payload.status || !["confirmed", "cancelled"].includes(payload.status)) {
+    if (
+      !Number.isInteger(id) ||
+      id < 1 ||
+      !payload.status ||
+      !["pending", "confirmed", "declined", "cancelled"].includes(payload.status)
+    ) {
       return Response.json({ error: "A valid reservation and status are required." }, { status: 400 });
     }
 
@@ -79,7 +84,7 @@ export async function PATCH(request: Request) {
   } catch (error) {
     const message = error instanceof Error ? error.message : "";
     if (message.includes("UNIQUE constraint failed")) {
-      return Response.json({ error: "That court time is already occupied by another reservation." }, { status: 409 });
+      return Response.json({ error: "That court time is already held by another reservation request." }, { status: 409 });
     }
     return Response.json({ error: "The reservation could not be updated." }, { status: 500 });
   }

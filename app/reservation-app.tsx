@@ -40,8 +40,8 @@ import {
   formatBookingDate,
   formatTime,
   todayIso,
-  type BookingConfirmation,
   type BookingDetails,
+  type BookingRequestReceipt,
   type CourtId,
   type ReservedSlot,
 } from "@/lib/reservations";
@@ -81,7 +81,7 @@ export function ReservationApp() {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
-  const [confirmation, setConfirmation] = useState<BookingConfirmation | null>(null);
+  const [confirmation, setConfirmation] = useState<BookingRequestReceipt | null>(null);
   const [guest, setGuest] = useState({
     guestName: "",
     email: "",
@@ -110,8 +110,8 @@ export function ReservationApp() {
   }, []);
 
   useEffect(() => {
-    void refreshAvailability(date);
-    setSelected(null);
+    const timeout = window.setTimeout(() => void refreshAvailability(date), 0);
+    return () => window.clearTimeout(timeout);
   }, [date, refreshAvailability]);
 
   const reservedKeys = useMemo(
@@ -121,7 +121,7 @@ export function ReservationApp() {
 
   const createReservation = useCallback(
     async (details: BookingDetails) => {
-      const data = await readResponse<{ reservation: BookingConfirmation }>(
+      const data = await readResponse<{ reservation: BookingRequestReceipt }>(
         await fetch("/api/reservations", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -173,9 +173,9 @@ export function ReservationApp() {
       );
       await context.registerTool(
         {
-          name: "create_court_reservation",
-          title: "Create court reservation",
-          description: "Reserve one available pickleball court for one hour and show its confirmation.",
+          name: "create_court_reservation_request",
+          title: "Request a court reservation",
+          description: "Request one available pickleball court for one hour. The owner must approve the request.",
           inputSchema: {
             type: "object",
             properties: {
@@ -194,7 +194,7 @@ export function ReservationApp() {
           async execute(input) {
             const booking = await createReservation(input as BookingDetails);
             return {
-              status: "confirmed",
+              status: booking.status,
               confirmationCode: booking.confirmationCode,
               court: courtName(booking.courtId),
               date: booking.bookingDate,
@@ -223,7 +223,7 @@ export function ReservationApp() {
         phone: guest.phone,
         playerCount: Number(guest.playerCount),
       });
-      toast.success("Your court is reserved.");
+      toast.success("Your reservation request was submitted.");
       setGuest({ guestName: "", email: "", phone: "", playerCount: "4" });
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Reservation failed.");
@@ -256,7 +256,7 @@ export function ReservationApp() {
         <div className="relative mx-auto grid max-w-7xl gap-8 px-5 py-10 sm:px-8 lg:grid-cols-[1fr_auto] lg:items-end lg:py-14">
           <div className="max-w-2xl">
             <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-sm text-white/80">
-              <Sparkles className="size-4 text-[#d7ff3f]" /> Instant confirmation
+              <Sparkles className="size-4 text-[#d7ff3f]" /> Owner-approved reservations
             </div>
             <h1 className="max-w-xl text-4xl font-semibold tracking-[-0.04em] sm:text-5xl">Your next match starts here.</h1>
             <p className="mt-4 max-w-xl text-base leading-7 text-white/68 sm:text-lg">Choose a court and an open one-hour time. No account required.</p>
@@ -277,7 +277,7 @@ export function ReservationApp() {
             </div>
             <div className="w-full sm:w-52">
               <Label htmlFor="booking-date" className="mb-2 text-[#36505f]">Reservation date</Label>
-              <Input id="booking-date" type="date" min={todayIso()} value={date} onChange={(event) => setDate(event.target.value)} className="h-11 bg-card" />
+              <Input id="booking-date" type="date" min={todayIso()} value={date} onChange={(event) => { setDate(event.target.value); setSelected(null); }} className="h-11 bg-card" />
             </div>
           </div>
 
@@ -353,7 +353,7 @@ export function ReservationApp() {
               <div><Label htmlFor="email" className="mb-2">Email</Label><Input id="email" type="email" required autoComplete="email" value={guest.email} onChange={(event) => setGuest({ ...guest, email: event.target.value })} placeholder="juan@example.com" className="h-11" /></div>
               <div><Label htmlFor="phone" className="mb-2">Mobile number</Label><Input id="phone" type="tel" required autoComplete="tel" value={guest.phone} onChange={(event) => setGuest({ ...guest, phone: event.target.value })} placeholder="09XX XXX XXXX" className="h-11" /></div>
               <div><Label htmlFor="players" className="mb-2">Number of players</Label><Select value={guest.playerCount} onValueChange={(value) => setGuest({ ...guest, playerCount: value })}><SelectTrigger id="players" className="h-11 w-full"><SelectValue /></SelectTrigger><SelectContent>{[1,2,3,4,5,6,7,8].map((count) => <SelectItem key={count} value={String(count)}>{count} player{count === 1 ? "" : "s"}</SelectItem>)}</SelectContent></Select></div>
-              <Button type="submit" size="lg" className="mt-2 h-12 w-full bg-[#0b1f2a] text-white hover:bg-[#173847]">{submitting ? "Confirming…" : <>Confirm reservation <ChevronRight /></>}</Button>
+              <Button type="submit" size="lg" className="mt-2 h-12 w-full bg-[#0b1f2a] text-white hover:bg-[#173847]">{submitting ? "Submitting…" : <>Request reservation <ChevronRight /></>}</Button>
             </fieldset>
 
             <div className="mt-5 flex items-start gap-3 border-t border-border pt-5 text-xs leading-5 text-muted-foreground"><ShieldCheck className="mt-0.5 size-4 shrink-0 text-[#527080]" /><p>Your contact details are used only for this reservation and court updates.</p></div>
@@ -365,14 +365,14 @@ export function ReservationApp() {
         <div className="mx-auto grid max-w-7xl gap-5 px-5 py-7 text-sm text-[#36505f] sm:grid-cols-3 sm:px-8">
           <p className="flex items-center gap-2"><Clock3 className="size-4 text-[#6f8b00]" />One-hour reservations</p>
           <p className="flex items-center gap-2"><Users className="size-4 text-[#6f8b00]" />Up to 8 players</p>
-          <p className="flex items-center gap-2"><CalendarDays className="size-4 text-[#6f8b00]" />Reserve instantly online</p>
+          <p className="flex items-center gap-2"><CalendarDays className="size-4 text-[#6f8b00]" />Owner approval before confirmation</p>
         </div>
       </section>
 
       <Dialog open={Boolean(confirmation)} onOpenChange={(open) => !open && setConfirmation(null)}>
         <DialogContent className="overflow-hidden p-0 sm:max-w-md">
-          <div className="bg-[#0b1f2a] px-6 py-7 text-white"><span className="mb-4 grid size-11 place-items-center rounded-full bg-[#d7ff3f] text-[#0b1f2a]"><Check className="size-6" /></span><DialogHeader><DialogTitle className="text-2xl">Court confirmed</DialogTitle><DialogDescription className="text-white/65">We saved your reservation and confirmation details.</DialogDescription></DialogHeader></div>
-          {confirmation ? <div className="space-y-4 px-6 py-6"><div className="rounded-xl bg-[#eff8da] p-4"><p className="text-xs font-medium uppercase tracking-[0.12em] text-[#607a00]">Confirmation code</p><p className="mt-1 text-xl font-semibold tracking-wide">{confirmation.confirmationCode}</p></div><dl className="grid grid-cols-[100px_1fr] gap-y-3 text-sm"><dt className="text-muted-foreground">Court</dt><dd className="font-medium">{courtName(confirmation.courtId)}</dd><dt className="text-muted-foreground">Date</dt><dd className="font-medium">{formatBookingDate(confirmation.bookingDate)}</dd><dt className="text-muted-foreground">Time</dt><dd className="font-medium">{formatTime(confirmation.startTime)}</dd><dt className="text-muted-foreground">Players</dt><dd className="font-medium">{confirmation.playerCount}</dd></dl></div> : null}
+          <div className="bg-[#0b1f2a] px-6 py-7 text-white"><span className="mb-4 grid size-11 place-items-center rounded-full bg-[#d7ff3f] text-[#0b1f2a]"><Clock3 className="size-6" /></span><DialogHeader><DialogTitle className="text-2xl">Request received</DialogTitle><DialogDescription className="text-white/65">Your selected court is being held while the owner reviews your request.</DialogDescription></DialogHeader></div>
+          {confirmation ? <div className="space-y-4 px-6 py-6"><div className="rounded-xl bg-[#eff8da] p-4"><p className="text-xs font-medium uppercase tracking-[0.12em] text-[#607a00]">Request code</p><p className="mt-1 text-xl font-semibold tracking-wide">{confirmation.confirmationCode}</p></div><dl className="grid grid-cols-[100px_1fr] gap-y-3 text-sm"><dt className="text-muted-foreground">Status</dt><dd className="font-medium text-amber-700">Awaiting admin approval</dd><dt className="text-muted-foreground">Court</dt><dd className="font-medium">{courtName(confirmation.courtId)}</dd><dt className="text-muted-foreground">Date</dt><dd className="font-medium">{formatBookingDate(confirmation.bookingDate)}</dd><dt className="text-muted-foreground">Time</dt><dd className="font-medium">{formatTime(confirmation.startTime)}</dd><dt className="text-muted-foreground">Players</dt><dd className="font-medium">{confirmation.playerCount}</dd></dl><p className="text-xs leading-5 text-muted-foreground">Keep this request code for your records. The reservation is not confirmed until the owner approves it.</p></div> : null}
           <DialogFooter className="px-6 pb-6"><Button className="w-full bg-[#0b1f2a] text-white" onClick={() => setConfirmation(null)}>Done</Button></DialogFooter>
         </DialogContent>
       </Dialog>

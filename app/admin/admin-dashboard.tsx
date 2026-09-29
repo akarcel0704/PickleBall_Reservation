@@ -1,12 +1,14 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import {
   ArrowLeft,
   CalendarDays,
   CheckCircle2,
   CircleOff,
   Clock3,
+  Hourglass,
   LogOut,
   RefreshCw,
   ShieldCheck,
@@ -76,20 +78,26 @@ export function AdminDashboard({ adminName, adminEmail, signOutPath }: AdminDash
   }, []);
 
   useEffect(() => {
-    void loadReservations(date);
+    const timeout = window.setTimeout(() => void loadReservations(date), 0);
+    return () => window.clearTimeout(timeout);
   }, [date, loadReservations]);
 
   const confirmed = useMemo(
     () => reservations.filter((reservation) => reservation.status === "confirmed"),
     [reservations],
   );
+  const pending = useMemo(
+    () => reservations.filter((reservation) => reservation.status === "pending"),
+    [reservations],
+  );
   const stats = useMemo(
     () => ({
       bookings: confirmed.length,
+      pending: pending.length,
       players: confirmed.reduce((total, reservation) => total + reservation.playerCount, 0),
       courts: new Set(confirmed.map((reservation) => reservation.courtId)).size,
     }),
-    [confirmed],
+    [confirmed, pending],
   );
 
   async function updateStatus(id: number, status: ReservationStatus) {
@@ -105,7 +113,13 @@ export function AdminDashboard({ adminName, adminEmail, signOutPath }: AdminDash
       setReservations((current) =>
         current.map((reservation) => (reservation.id === id ? { ...reservation, status } : reservation)),
       );
-      toast.success(status === "cancelled" ? "Reservation cancelled." : "Reservation restored.");
+      const messages: Record<ReservationStatus, string> = {
+        pending: "Reservation returned to pending review.",
+        confirmed: "Reservation approved.",
+        declined: "Reservation declined and the court time was released.",
+        cancelled: "Reservation cancelled and the court time was released.",
+      };
+      toast.success(messages[status]);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Reservation could not be updated.");
     } finally {
@@ -117,12 +131,12 @@ export function AdminDashboard({ adminName, adminEmail, signOutPath }: AdminDash
     <main className="min-h-screen bg-[#f5f8f7] text-foreground">
       <header className="border-b border-white/10 bg-[#0b1f2a] text-white">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-4 sm:px-8">
-          <a href="/" className="flex items-center gap-3" aria-label="CourtSide customer booking">
+          <Link href="/" className="flex items-center gap-3" aria-label="CourtSide customer booking">
             <span className="grid size-10 place-items-center rounded-full bg-[#d7ff3f] text-sm font-black text-[#0b1f2a]">CS</span>
             <div><p className="font-semibold">CourtSide</p><p className="text-xs text-white/60">Admin dashboard</p></div>
-          </a>
+          </Link>
           <div className="flex items-center gap-2">
-            <a href="/" className="hidden items-center gap-2 rounded-lg px-3 py-2 text-sm text-white/75 hover:bg-white/10 hover:text-white sm:flex"><ArrowLeft className="size-4" />Customer booking</a>
+            <Link href="/" className="hidden items-center gap-2 rounded-lg px-3 py-2 text-sm text-white/75 hover:bg-white/10 hover:text-white sm:flex"><ArrowLeft className="size-4" />Customer booking</Link>
             <a href={signOutPath} target="_top" className="inline-flex items-center gap-2 rounded-lg border border-white/15 px-3 py-2 text-sm text-white/75 hover:bg-white/10 hover:text-white"><LogOut className="size-4" />Sign out</a>
           </div>
         </div>
@@ -141,7 +155,8 @@ export function AdminDashboard({ adminName, adminEmail, signOutPath }: AdminDash
           </div>
         </div>
 
-        <section className="mb-6 grid gap-4 sm:grid-cols-3" aria-label="Daily reservation totals">
+        <section className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4" aria-label="Daily reservation totals">
+          <StatCard icon={Hourglass} label="Pending approval" value={stats.pending} />
           <StatCard icon={CalendarDays} label="Confirmed bookings" value={stats.bookings} />
           <StatCard icon={Users} label="Expected players" value={stats.players} />
           <StatCard icon={Clock3} label="Courts in use" value={`${stats.courts} / 3`} />
@@ -161,18 +176,29 @@ export function AdminDashboard({ adminName, adminEmail, signOutPath }: AdminDash
             <div className="px-6 py-16 text-center"><CalendarDays className="mx-auto size-9 text-[#9aacb4]" /><h3 className="mt-4 font-semibold">No reservations for this date</h3><p className="mt-1 text-sm text-muted-foreground">New customer bookings will appear here automatically.</p></div>
           ) : (
             <Table>
-              <TableHeader><TableRow className="bg-[#f5f8f7]"><TableHead className="pl-6">Time</TableHead><TableHead>Court</TableHead><TableHead>Guest</TableHead><TableHead>Players</TableHead><TableHead>Confirmation</TableHead><TableHead>Status</TableHead><TableHead className="pr-6 text-right">Action</TableHead></TableRow></TableHeader>
+              <TableHeader><TableRow className="bg-[#f5f8f7]"><TableHead className="pl-6">Time</TableHead><TableHead>Court</TableHead><TableHead>Guest</TableHead><TableHead>Players</TableHead><TableHead>Request code</TableHead><TableHead>Status</TableHead><TableHead className="pr-6 text-right">Action</TableHead></TableRow></TableHeader>
               <TableBody>
                 {reservations.map((reservation) => (
-                  <TableRow key={reservation.id} className={reservation.status === "cancelled" ? "bg-[#fafafa] text-muted-foreground" : ""}>
+                  <TableRow key={reservation.id} className={["declined", "cancelled"].includes(reservation.status) ? "bg-[#fafafa] text-muted-foreground" : ""}>
                     <TableCell className="pl-6 font-semibold text-foreground">{formatTime(reservation.startTime)}</TableCell>
                     <TableCell>{courtName(reservation.courtId)}</TableCell>
                     <TableCell><div className="min-w-44"><p className="font-medium text-foreground">{reservation.guestName}</p><p className="text-xs text-muted-foreground">{reservation.phone} · {reservation.email}</p></div></TableCell>
                     <TableCell>{reservation.playerCount}</TableCell>
                     <TableCell className="font-mono text-xs">{reservation.confirmationCode}</TableCell>
-                    <TableCell>{reservation.status === "confirmed" ? <Badge className="bg-[#e9f5ce] text-[#425500]"><CheckCircle2 />Confirmed</Badge> : <Badge variant="secondary"><CircleOff />Cancelled</Badge>}</TableCell>
+                    <TableCell><ReservationStatusBadge status={reservation.status} /></TableCell>
                     <TableCell className="pr-6 text-right">
-                      {reservation.status === "confirmed" ? (
+                      {reservation.status === "pending" ? (
+                        <div className="flex justify-end gap-2">
+                          <Button size="sm" className="bg-[#607a00] text-white hover:bg-[#4f6500]" disabled={updatingId === reservation.id} onClick={() => void updateStatus(reservation.id, "confirmed")}>Approve</Button>
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild><Button variant="outline" size="sm" className="text-red-700 hover:bg-red-50 hover:text-red-800" disabled={updatingId === reservation.id}>Decline</Button></AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader><AlertDialogTitle>Decline this request?</AlertDialogTitle><AlertDialogDescription>{reservation.guestName}&apos;s request for {formatTime(reservation.startTime)} on {courtName(reservation.courtId)} will be declined and the court time will become available again.</AlertDialogDescription></AlertDialogHeader>
+                              <AlertDialogFooter><AlertDialogCancel>Keep pending</AlertDialogCancel><AlertDialogAction variant="destructive" onClick={() => void updateStatus(reservation.id, "declined")}>Decline request</AlertDialogAction></AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </div>
+                      ) : reservation.status === "confirmed" ? (
                         <AlertDialog>
                           <AlertDialogTrigger asChild><Button variant="ghost" size="sm" className="text-red-700 hover:bg-red-50 hover:text-red-800" disabled={updatingId === reservation.id}>Cancel</Button></AlertDialogTrigger>
                           <AlertDialogContent>
@@ -181,7 +207,7 @@ export function AdminDashboard({ adminName, adminEmail, signOutPath }: AdminDash
                           </AlertDialogContent>
                         </AlertDialog>
                       ) : (
-                        <Button variant="outline" size="sm" disabled={updatingId === reservation.id} onClick={() => void updateStatus(reservation.id, "confirmed")}>Restore</Button>
+                        <Button variant="outline" size="sm" disabled={updatingId === reservation.id} onClick={() => void updateStatus(reservation.id, "confirmed")}>{reservation.status === "declined" ? "Approve" : "Restore"}</Button>
                       )}
                     </TableCell>
                   </TableRow>
@@ -194,6 +220,16 @@ export function AdminDashboard({ adminName, adminEmail, signOutPath }: AdminDash
       <Toaster position="top-center" richColors />
     </main>
   );
+}
+
+function ReservationStatusBadge({ status }: { status: ReservationStatus }) {
+  if (status === "pending") {
+    return <Badge className="bg-amber-100 text-amber-800"><Hourglass />Pending</Badge>;
+  }
+  if (status === "confirmed") {
+    return <Badge className="bg-[#e9f5ce] text-[#425500]"><CheckCircle2 />Confirmed</Badge>;
+  }
+  return <Badge variant="secondary"><CircleOff />{status === "declined" ? "Declined" : "Cancelled"}</Badge>;
 }
 
 type StatCardProps = {

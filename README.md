@@ -140,6 +140,10 @@ secrets in the Cloudflare dashboard:
   `https://example.cloudflareaccess.com`
 - `CLOUDFLARE_ACCESS_AUD`: the Access application's Audience (AUD) tag
 
+New customer submissions enter a pending state and hold the selected court
+time. The owner can approve or decline each request from the admin dashboard;
+declining a request releases the time for another customer.
+
 `ADMIN_EMAIL` and the email allowed by the Cloudflare Access policy must match
 the authenticated Cloudflare identity exactly, including punctuation such as
 dots in the local part of the address.

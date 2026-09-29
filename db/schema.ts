@@ -13,13 +13,13 @@ export const reservations = sqliteTable(
     email: text("email").notNull(),
     phone: text("phone").notNull(),
     playerCount: integer("player_count").notNull(),
-    status: text("status").notNull().default("confirmed"),
+    status: text("status").notNull().default("pending"),
     createdAt: integer("created_at").notNull(),
   },
   (table) => [
     uniqueIndex("idx_reservations_active_slot")
       .on(table.bookingDate, table.courtId, table.startTime)
-      .where(sql`${table.status} = 'confirmed'`),
+      .where(sql`${table.status} IN ('pending', 'confirmed')`),
     index("idx_reservations_booking_date").on(table.bookingDate),
   ],
 );

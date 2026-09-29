@@ -15,6 +15,13 @@
       "when": 1790345059103,
       "tag": "0001_slow_talkback",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1790641587473,
+      "tag": "0002_pending_approval",
+      "breakpoints": true
     }
   ]
 }
