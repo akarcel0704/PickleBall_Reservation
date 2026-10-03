@@ -132,7 +132,13 @@ export function AdminDashboard({ adminName, adminEmail, signOutPath }: AdminDash
       <header className="border-b border-white/10 bg-[#0b356b] text-white">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-4 sm:px-8">
           <Link href="/" className="flex items-center gap-3" aria-label="Paddle Bay customer booking">
-            <span className="grid size-10 place-items-center rounded-full bg-[#86c51a] text-sm font-black text-[#0b356b]">PB</span>
+            <img
+              src="/paddle-bay-logo.png"
+              alt="Paddle Bay Pickleball Court logo"
+              width={56}
+              height={56}
+              className="size-12 shrink-0 rounded-full bg-white object-contain sm:size-14"
+            />
             <div><p className="font-semibold">Paddle Bay</p><p className="text-xs text-white/60">Admin dashboard</p></div>
           </Link>
           <div className="flex items-center gap-2">

@@ -238,7 +238,13 @@ export function ReservationApp() {
       <header className="border-b border-border bg-[#0b356b] text-white">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-8">
           <div className="flex items-center gap-3">
-            <span className="grid size-10 place-items-center rounded-full bg-[#86c51a] text-sm font-black text-[#0b356b]">PB</span>
+            <img
+              src="/paddle-bay-logo.png"
+              alt="Paddle Bay Pickleball Court logo"
+              width={64}
+              height={64}
+              className="size-14 shrink-0 rounded-full bg-white object-contain sm:size-16"
+            />
             <div>
               <p className="text-base font-semibold tracking-tight">Paddle Bay</p>
               <p className="text-xs text-white/60">Pickleball reservations</p>

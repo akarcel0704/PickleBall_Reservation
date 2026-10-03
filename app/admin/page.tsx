@@ -41,7 +41,13 @@ function AdminAccessDenied({
   return (
     <main className="grid min-h-screen place-items-center bg-[#f6f9fd] px-5 text-foreground">
       <section className="w-full max-w-md rounded-2xl border border-border bg-white p-7 text-center shadow-[0_18px_60px_rgba(11,53,107,0.11)] sm:p-9">
-        <span className="mx-auto grid size-12 place-items-center rounded-full bg-[#0b356b] text-sm font-black text-[#86c51a]">PB</span>
+        <img
+          src="/paddle-bay-logo.png"
+          alt="Paddle Bay Pickleball Court logo"
+          width={72}
+          height={72}
+          className="mx-auto size-18 rounded-full bg-white object-contain"
+        />
         <p className="mt-5 text-sm font-medium text-[#60758d]">Administrator access</p>
         <h1 className="mt-1 text-2xl font-semibold tracking-tight">This account is not authorized</h1>
         <p className="mt-3 text-sm leading-6 text-muted-foreground">
