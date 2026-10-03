@@ -3,28 +3,28 @@
 @import "../vendor/shadcn-tailwind-4.13.0.css";
 
 :root {
-  --background: #f8faf9;
-  --foreground: #0b1f2a;
+  --background: #f6f9fd;
+  --foreground: #0b356b;
   --card: #ffffff;
-  --card-foreground: #0b1f2a;
+  --card-foreground: #0b356b;
   --popover: #ffffff;
-  --popover-foreground: #0b1f2a;
-  --primary: #0b1f2a;
+  --popover-foreground: #0b356b;
+  --primary: #0b356b;
   --primary-foreground: #ffffff;
-  --secondary: #edf3f1;
-  --secondary-foreground: #173847;
-  --muted: #edf3f1;
-  --muted-foreground: #607681;
-  --accent: #eff8da;
-  --accent-foreground: #263715;
+  --secondary: #edf3fa;
+  --secondary-foreground: #164f86;
+  --muted: #edf3fa;
+  --muted-foreground: #60758d;
+  --accent: #f0f8df;
+  --accent-foreground: #405f00;
   --destructive: #c93f43;
-  --border: #d8e2e4;
-  --input: #c5d3d7;
-  --ring: #1f839b;
-  --chart-1: #0b1f2a;
-  --chart-2: #d7ff3f;
-  --chart-3: #1f839b;
-  --chart-4: #70a66f;
+  --border: #d7e2ee;
+  --input: #c5d3e2;
+  --ring: #5d91c8;
+  --chart-1: #0b356b;
+  --chart-2: #86c51a;
+  --chart-3: #5d91c8;
+  --chart-4: #6c9f13;
   --chart-5: #f2a95c;
   --radius: 0.85rem;
 }

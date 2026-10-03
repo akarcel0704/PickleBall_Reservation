@@ -2,8 +2,8 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "CourtSide | Pickleball Reservations",
-  description: "Choose an available pickleball court and reserve your match time online.",
+  title: "Paddle Bay | Pickleball Court Reservations",
+  description: "Reserve one of Paddle Bay's two pickleball courts online.",
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",

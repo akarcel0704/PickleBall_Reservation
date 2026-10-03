@@ -148,7 +148,7 @@ declining a request releases the time for another customer.
 the authenticated Cloudflare identity exactly, including punctuation such as
 dots in the local part of the address.
 
-To create the path-scoped `CourtSide Admin` Access application for this
+To create the path-scoped `Paddle Bay Admin` Access application for this
 deployment, run the helper from the repository root:
 
 ```powershell

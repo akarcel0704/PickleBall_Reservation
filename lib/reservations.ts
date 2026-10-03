@@ -1,7 +1,6 @@
 export const COURTS = [
   { id: "court-1", name: "Court 1", surface: "Championship blue" },
   { id: "court-2", name: "Court 2", surface: "Championship blue" },
-  { id: "court-3", name: "Court 3", surface: "Practice court" },
 ] as const;
 
 export const TIME_SLOTS = Array.from({ length: 15 }, (_, index) => {

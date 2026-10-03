@@ -235,35 +235,35 @@ export function ReservationApp() {
 
   return (
     <main className="min-h-screen bg-background text-foreground">
-      <header className="border-b border-border bg-[#0b1f2a] text-white">
+      <header className="border-b border-border bg-[#0b356b] text-white">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-8">
           <div className="flex items-center gap-3">
-            <span className="grid size-10 place-items-center rounded-full bg-[#d7ff3f] text-sm font-black text-[#0b1f2a]">CS</span>
+            <span className="grid size-10 place-items-center rounded-full bg-[#86c51a] text-sm font-black text-[#0b356b]">PB</span>
             <div>
-              <p className="text-base font-semibold tracking-tight">CourtSide</p>
+              <p className="text-base font-semibold tracking-tight">Paddle Bay</p>
               <p className="text-xs text-white/60">Pickleball reservations</p>
             </div>
           </div>
           <div className="hidden items-center gap-4 text-sm text-white/70 sm:flex">
-            <span className="flex items-center gap-2"><MapPin className="size-4 text-[#d7ff3f]" />Open daily · 7 AM–10 PM</span>
+            <span className="flex items-center gap-2"><MapPin className="size-4 text-[#86c51a]" />Open daily · 7 AM–10 PM</span>
             <a href="/admin" className="flex items-center gap-2 rounded-lg border border-white/15 px-3 py-2 hover:bg-white/10 hover:text-white"><Settings className="size-4" />Admin</a>
           </div>
         </div>
       </header>
 
-      <section className="relative overflow-hidden border-b border-border bg-[#0b1f2a] text-white">
+      <section className="relative overflow-hidden border-b border-border bg-[#0b356b] text-white">
         <div className="court-lines absolute inset-0 opacity-25" aria-hidden="true" />
         <div className="relative mx-auto grid max-w-7xl gap-8 px-5 py-10 sm:px-8 lg:grid-cols-[1fr_auto] lg:items-end lg:py-14">
           <div className="max-w-2xl">
             <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-sm text-white/80">
-              <Sparkles className="size-4 text-[#d7ff3f]" /> Owner-approved reservations
+              <Sparkles className="size-4 text-[#86c51a]" /> Owner-approved reservations
             </div>
             <h1 className="max-w-xl text-4xl font-semibold tracking-[-0.04em] sm:text-5xl">Your next match starts here.</h1>
             <p className="mt-4 max-w-xl text-base leading-7 text-white/68 sm:text-lg">Choose a court and an open one-hour time. No account required.</p>
           </div>
           <div className="flex gap-7 border-l border-white/15 pl-6 text-sm">
-            <div><span className="block text-2xl font-semibold text-[#d7ff3f]">3</span><span className="text-white/60">courts</span></div>
-            <div><span className="block text-2xl font-semibold text-[#d7ff3f]">15</span><span className="text-white/60">daily slots</span></div>
+            <div><span className="block text-2xl font-semibold text-[#86c51a]">2</span><span className="text-white/60">courts</span></div>
+            <div><span className="block text-2xl font-semibold text-[#86c51a]">15</span><span className="text-white/60">daily slots</span></div>
           </div>
         </div>
       </section>
@@ -272,19 +272,19 @@ export function ReservationApp() {
         <section aria-labelledby="availability-heading">
           <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <p className="mb-1 text-sm font-medium text-[#527080]">Step 1 of 2</p>
+              <p className="mb-1 text-sm font-medium text-[#496784]">Step 1 of 2</p>
               <h2 id="availability-heading" className="text-2xl font-semibold tracking-tight">Choose your court time</h2>
             </div>
             <div className="w-full sm:w-52">
-              <Label htmlFor="booking-date" className="mb-2 text-[#36505f]">Reservation date</Label>
+              <Label htmlFor="booking-date" className="mb-2 text-[#365b80]">Reservation date</Label>
               <Input id="booking-date" type="date" min={todayIso()} value={date} onChange={(event) => { setDate(event.target.value); setSelected(null); }} className="h-11 bg-card" />
             </div>
           </div>
 
           <div className="mb-4 flex items-center justify-between">
-            <p className="text-sm font-medium text-[#36505f]">{formatBookingDate(date)}</p>
+            <p className="text-sm font-medium text-[#365b80]">{formatBookingDate(date)}</p>
             <div className="flex items-center gap-4 text-xs text-muted-foreground">
-              <span className="flex items-center gap-1.5"><span className="size-2 rounded-full bg-[#d7ff3f] ring-1 ring-[#9fbf21]" />Available</span>
+              <span className="flex items-center gap-1.5"><span className="size-2 rounded-full bg-[#86c51a] ring-1 ring-[#6c9f13]" />Available</span>
               <span className="flex items-center gap-1.5"><span className="size-2 rounded-full bg-[#dce4e8]" />Reserved</span>
             </div>
           </div>
@@ -295,13 +295,13 @@ export function ReservationApp() {
               <Button variant="outline" size="sm" className="mt-3" onClick={() => void refreshAvailability(date)}><RefreshCw />Try again</Button>
             </div>
           ) : (
-            <div className="grid gap-4 md:grid-cols-3" aria-busy={loading}>
+            <div className="grid gap-4 md:grid-cols-2" aria-busy={loading}>
               {COURTS.map((court) => (
-                <article key={court.id} className="overflow-hidden rounded-2xl border border-border bg-card shadow-[0_12px_40px_rgba(11,31,42,0.06)]">
-                  <div className="border-b border-border bg-[#f0f5f3] px-4 py-4">
+                <article key={court.id} className="overflow-hidden rounded-2xl border border-border bg-card shadow-[0_12px_40px_rgba(11,53,107,0.07)]">
+                  <div className="border-b border-border bg-[#f1f6fc] px-4 py-4">
                     <div className="flex items-center justify-between gap-3">
                       <div><h3 className="font-semibold">{court.name}</h3><p className="mt-0.5 text-xs text-muted-foreground">{court.surface}</p></div>
-                      <span className="rounded-full bg-[#0b1f2a] px-2.5 py-1 text-xs font-medium text-white">1 hr</span>
+                      <span className="rounded-full bg-[#0b356b] px-2.5 py-1 text-xs font-medium text-white">1 hr</span>
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-2 p-3 sm:grid-cols-3 md:grid-cols-2 xl:grid-cols-3">
@@ -316,7 +316,7 @@ export function ReservationApp() {
                           disabled={isReserved || loading}
                           aria-pressed={isSelected}
                           onClick={() => setSelected({ courtId: court.id, startTime: time })}
-                          className="min-h-12 rounded-xl border px-2 py-2 text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1f839b] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:border-transparent disabled:bg-[#edf1f2] disabled:text-[#94a3aa] aria-pressed:border-[#0b1f2a] aria-pressed:bg-[#0b1f2a] aria-pressed:text-white enabled:border-[#cad7db] enabled:bg-white enabled:hover:border-[#9fbd27] enabled:hover:bg-[#f7ffd9]"
+                          className="min-h-12 rounded-xl border px-2 py-2 text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5d91c8] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:border-transparent disabled:bg-[#edf3fa] disabled:text-[#94a3aa] aria-pressed:border-[#0b356b] aria-pressed:bg-[#0b356b] aria-pressed:text-white enabled:border-[#c5d3e2] enabled:bg-white enabled:hover:border-[#86c51a] enabled:hover:bg-[#f4fae8]"
                         >
                           {formatTime(time)}
                         </button>
@@ -330,17 +330,17 @@ export function ReservationApp() {
         </section>
 
         <aside className="lg:sticky lg:top-5 lg:self-start">
-          <form onSubmit={submit} className="rounded-2xl border border-border bg-card p-5 shadow-[0_16px_50px_rgba(11,31,42,0.08)] sm:p-6">
-            <p className="mb-1 text-sm font-medium text-[#527080]">Step 2 of 2</p>
+          <form onSubmit={submit} className="rounded-2xl border border-border bg-card p-5 shadow-[0_16px_50px_rgba(11,53,107,0.09)] sm:p-6">
+            <p className="mb-1 text-sm font-medium text-[#496784]">Step 2 of 2</p>
             <h2 className="text-xl font-semibold">Reservation details</h2>
 
             {selected ? (
-              <div className="my-5 rounded-xl bg-[#eff8da] p-4 text-[#223127]">
+              <div className="my-5 rounded-xl bg-[#f0f8df] p-4 text-[#304800]">
                 <div className="flex items-start justify-between gap-3">
-                  <div><p className="font-semibold">{courtName(selected.courtId)}</p><p className="mt-1 text-sm text-[#526358]">{formatBookingDate(date)}</p></div>
-                  <Check className="size-5 text-[#607a00]" />
+                  <div><p className="font-semibold">{courtName(selected.courtId)}</p><p className="mt-1 text-sm text-[#567027]">{formatBookingDate(date)}</p></div>
+                  <Check className="size-5 text-[#5f8e10]" />
                 </div>
-                <div className="mt-3 flex items-center gap-2 border-t border-[#d7e6b5] pt-3 text-sm font-medium"><Clock3 className="size-4" />{formatTime(selected.startTime)}–{formatTime(`${String(Number(selected.startTime.slice(0, 2)) + 1).padStart(2, "0")}:00`)}</div>
+                <div className="mt-3 flex items-center gap-2 border-t border-[#d8e9b8] pt-3 text-sm font-medium"><Clock3 className="size-4" />{formatTime(selected.startTime)}–{formatTime(`${String(Number(selected.startTime.slice(0, 2)) + 1).padStart(2, "0")}:00`)}</div>
               </div>
             ) : (
               <div className="my-5 rounded-xl border border-dashed border-[#b9c9ce] bg-[#f7f9f9] p-5 text-center text-sm text-muted-foreground">
@@ -353,27 +353,27 @@ export function ReservationApp() {
               <div><Label htmlFor="email" className="mb-2">Email</Label><Input id="email" type="email" required autoComplete="email" value={guest.email} onChange={(event) => setGuest({ ...guest, email: event.target.value })} placeholder="juan@example.com" className="h-11" /></div>
               <div><Label htmlFor="phone" className="mb-2">Mobile number</Label><Input id="phone" type="tel" required autoComplete="tel" value={guest.phone} onChange={(event) => setGuest({ ...guest, phone: event.target.value })} placeholder="09XX XXX XXXX" className="h-11" /></div>
               <div><Label htmlFor="players" className="mb-2">Number of players</Label><Select value={guest.playerCount} onValueChange={(value) => setGuest({ ...guest, playerCount: value })}><SelectTrigger id="players" className="h-11 w-full"><SelectValue /></SelectTrigger><SelectContent>{[1,2,3,4,5,6,7,8].map((count) => <SelectItem key={count} value={String(count)}>{count} player{count === 1 ? "" : "s"}</SelectItem>)}</SelectContent></Select></div>
-              <Button type="submit" size="lg" className="mt-2 h-12 w-full bg-[#0b1f2a] text-white hover:bg-[#173847]">{submitting ? "Submitting…" : <>Request reservation <ChevronRight /></>}</Button>
+              <Button type="submit" size="lg" className="mt-2 h-12 w-full bg-[#0b356b] text-white hover:bg-[#082a57]">{submitting ? "Submitting…" : <>Request reservation <ChevronRight /></>}</Button>
             </fieldset>
 
-            <div className="mt-5 flex items-start gap-3 border-t border-border pt-5 text-xs leading-5 text-muted-foreground"><ShieldCheck className="mt-0.5 size-4 shrink-0 text-[#527080]" /><p>Your contact details are used only for this reservation and court updates.</p></div>
+            <div className="mt-5 flex items-start gap-3 border-t border-border pt-5 text-xs leading-5 text-muted-foreground"><ShieldCheck className="mt-0.5 size-4 shrink-0 text-[#496784]" /><p>Your contact details are used only for this reservation and court updates.</p></div>
           </form>
         </aside>
       </div>
 
-      <section className="border-t border-border bg-[#eef3f2]">
-        <div className="mx-auto grid max-w-7xl gap-5 px-5 py-7 text-sm text-[#36505f] sm:grid-cols-3 sm:px-8">
-          <p className="flex items-center gap-2"><Clock3 className="size-4 text-[#6f8b00]" />One-hour reservations</p>
-          <p className="flex items-center gap-2"><Users className="size-4 text-[#6f8b00]" />Up to 8 players</p>
-          <p className="flex items-center gap-2"><CalendarDays className="size-4 text-[#6f8b00]" />Owner approval before confirmation</p>
+      <section className="border-t border-border bg-[#edf3fa]">
+        <div className="mx-auto grid max-w-7xl gap-5 px-5 py-7 text-sm text-[#365b80] sm:grid-cols-3 sm:px-8">
+          <p className="flex items-center gap-2"><Clock3 className="size-4 text-[#5f8e10]" />One-hour reservations</p>
+          <p className="flex items-center gap-2"><Users className="size-4 text-[#5f8e10]" />Up to 8 players</p>
+          <p className="flex items-center gap-2"><CalendarDays className="size-4 text-[#5f8e10]" />Owner approval before confirmation</p>
         </div>
       </section>
 
       <Dialog open={Boolean(confirmation)} onOpenChange={(open) => !open && setConfirmation(null)}>
         <DialogContent className="overflow-hidden p-0 sm:max-w-md">
-          <div className="bg-[#0b1f2a] px-6 py-7 text-white"><span className="mb-4 grid size-11 place-items-center rounded-full bg-[#d7ff3f] text-[#0b1f2a]"><Clock3 className="size-6" /></span><DialogHeader><DialogTitle className="text-2xl">Request received</DialogTitle><DialogDescription className="text-white/65">Your selected court is being held while the owner reviews your request.</DialogDescription></DialogHeader></div>
-          {confirmation ? <div className="space-y-4 px-6 py-6"><div className="rounded-xl bg-[#eff8da] p-4"><p className="text-xs font-medium uppercase tracking-[0.12em] text-[#607a00]">Request code</p><p className="mt-1 text-xl font-semibold tracking-wide">{confirmation.confirmationCode}</p></div><dl className="grid grid-cols-[100px_1fr] gap-y-3 text-sm"><dt className="text-muted-foreground">Status</dt><dd className="font-medium text-amber-700">Awaiting admin approval</dd><dt className="text-muted-foreground">Court</dt><dd className="font-medium">{courtName(confirmation.courtId)}</dd><dt className="text-muted-foreground">Date</dt><dd className="font-medium">{formatBookingDate(confirmation.bookingDate)}</dd><dt className="text-muted-foreground">Time</dt><dd className="font-medium">{formatTime(confirmation.startTime)}</dd><dt className="text-muted-foreground">Players</dt><dd className="font-medium">{confirmation.playerCount}</dd></dl><p className="text-xs leading-5 text-muted-foreground">Keep this request code for your records. The reservation is not confirmed until the owner approves it.</p></div> : null}
-          <DialogFooter className="px-6 pb-6"><Button className="w-full bg-[#0b1f2a] text-white" onClick={() => setConfirmation(null)}>Done</Button></DialogFooter>
+          <div className="bg-[#0b356b] px-6 py-7 text-white"><span className="mb-4 grid size-11 place-items-center rounded-full bg-[#86c51a] text-[#0b356b]"><Clock3 className="size-6" /></span><DialogHeader><DialogTitle className="text-2xl">Request received</DialogTitle><DialogDescription className="text-white/65">Your selected court is being held while the owner reviews your request.</DialogDescription></DialogHeader></div>
+          {confirmation ? <div className="space-y-4 px-6 py-6"><div className="rounded-xl bg-[#f0f8df] p-4"><p className="text-xs font-medium uppercase tracking-[0.12em] text-[#5f8e10]">Request code</p><p className="mt-1 text-xl font-semibold tracking-wide">{confirmation.confirmationCode}</p></div><dl className="grid grid-cols-[100px_1fr] gap-y-3 text-sm"><dt className="text-muted-foreground">Status</dt><dd className="font-medium text-amber-700">Awaiting admin approval</dd><dt className="text-muted-foreground">Court</dt><dd className="font-medium">{courtName(confirmation.courtId)}</dd><dt className="text-muted-foreground">Date</dt><dd className="font-medium">{formatBookingDate(confirmation.bookingDate)}</dd><dt className="text-muted-foreground">Time</dt><dd className="font-medium">{formatTime(confirmation.startTime)}</dd><dt className="text-muted-foreground">Players</dt><dd className="font-medium">{confirmation.playerCount}</dd></dl><p className="text-xs leading-5 text-muted-foreground">Keep this request code for your records. The reservation is not confirmed until the owner approves it.</p></div> : null}
+          <DialogFooter className="px-6 pb-6"><Button className="w-full bg-[#0b356b] text-white" onClick={() => setConfirmation(null)}>Done</Button></DialogFooter>
         </DialogContent>
       </Dialog>
       <Toaster position="top-center" richColors />
